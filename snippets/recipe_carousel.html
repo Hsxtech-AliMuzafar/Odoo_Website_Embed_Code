@@ -1,0 +1,303 @@
+<!-- 
+  Odoo Website Embed Code Snippet
+  Component: Premium 3D Swiper Carousel (Coverflow)
+  Author: Ali Muzafar (Hsx TECH)
+  How to Use: Copy this entire code into an "Embed Code" block in Odoo.
+-->
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<style>
+    :root {
+        --carousel-height: 550px;
+        --card-width: 320px;
+        --accent-color: #F5F0F1; /* Primary Light Accent */
+        --text-color: #720528;   /* Primary Dark Accent */
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --overlay-gradient: linear-gradient(to top, rgba(114, 5, 40, 0.95), rgba(0, 0, 0, 0.4), transparent);
+    }
+
+    .premium-carousel-container {
+        width: 100%;
+        padding: 60px 0;
+        overflow: hidden;
+        background: transparent;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        position: relative;
+    }
+
+    .swiper-recipe {
+        width: 100%;
+        max-width: 1200px;
+        /* Prevents excessive stretching on ultra-wide screens */
+        margin: 0 auto;
+        height: var(--carousel-height);
+        padding-top: 20px;
+        padding-bottom: 50px;
+    }
+
+    .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: var(--card-width);
+        height: 420px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid var(--glass-border);
+    }
+
+    .swiper-slide img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        transition: transform 0.6s ease;
+    }
+
+    .swiper-slide:hover img {
+        transform: scale(1.05);
+    }
+
+    .slide-content {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 30px 20px 25px;
+        background: var(--overlay-gradient);
+        z-index: 2;
+        text-align: center;
+        color: var(--accent-color);
+        backdrop-filter: blur(4px);
+    }
+
+    .slide-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: inline-block;
+        background: rgba(255, 168, 196, 0.85);
+        /* Professional Highlight */
+        padding: 5px 15px;
+        border-radius: 4px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .slide-desc {
+        font-size: 13px;
+        margin-bottom: 22px;
+        opacity: 0.95;
+        line-height: 1.5;
+        font-weight: 400;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .recipe-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: var(--accent-color);
+        color: var(--text-color);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-size: 11px;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .recipe-btn:hover {
+        background: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Navigation Arrows */
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: var(--text-color) !important;
+        background: var(--accent-color);
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+        transform: scale(1.1);
+        background: #ffffff;
+    }
+
+    /* Pagination Styling */
+    .swiper-pagination-bullet {
+        background: var(--text-color) !important;
+        opacity: 0.5;
+    }
+
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+        :root {
+            --carousel-height: 480px;
+            --card-width: 260px;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            display: none;
+            /* Hide arrows on mobile */
+        }
+    }
+</style>
+
+<div class="premium-carousel-container">
+    <div class="swiper swiper-recipe">
+        <div class="swiper-wrapper" id="recipe-wrapper">
+            <!-- Slides will be injected here by JS -->
+        </div>
+
+        <!-- Navigation Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+    /**
+     * CONFIGURATION SECTION
+     * Edit this list to customize your premium carousel.
+     * Add your own images, titles, and descriptions below.
+     */
+    const CAROUSEL_CONFIG = [
+        {
+            image: 'https://via.placeholder.com/800x1024?text=Slide+1',
+            title: 'Your Feature Title',
+            description: 'Provide a brief, compelling description of this feature or product here to engage your visitors.',
+            buttonText: 'Action Button',
+            link: '#'
+        },
+        {
+            image: 'https://via.placeholder.com/800x1024?text=Slide+2',
+            title: 'Highlight Highlight',
+            description: 'Explain the unique value proposition or key benefit of this particular item in a concise way.',
+            buttonText: 'Learn More',
+            link: '#'
+        },
+        {
+            image: 'https://via.placeholder.com/800x1024?text=Slide+3',
+            title: 'Professional Service',
+            description: 'Showcase your high-quality services or product features using this premium 3D coverflow effect.',
+            buttonText: 'Get Started',
+            link: '#'
+        },
+        {
+            image: 'https://via.placeholder.com/800x1024?text=Slide+4',
+            title: 'Elite Collection',
+            description: 'Organize your best content into this architectural carousel designed for modern business websites.',
+            buttonText: 'View Collection',
+            link: '#'
+        },
+        {
+            image: 'https://via.placeholder.com/800x1024?text=Slide+5',
+            title: 'Innovation Lead',
+            description: 'Stand out from the competition with interactive UI elements built for Odoo Website Builder.',
+            buttonText: 'Partner Now',
+            link: '#'
+        }
+    ];
+
+    function initRecipeCarousel() {
+        const wrapper = document.getElementById('recipe-wrapper');
+        if (!wrapper || !CAROUSEL_CONFIG.length) return;
+
+        // 1. Programmatic Duplication for seamless looping
+        // We ensure at least 15 slides are present to fill wide screens.
+        let displayList = [...CAROUSEL_CONFIG];
+        while (displayList.length < 15) {
+            displayList = [...displayList, ...CAROUSEL_CONFIG];
+        }
+
+        // 2. Generate Slides
+        displayList.forEach((item) => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = `
+                <img src="${item.image}" alt="${item.title}" loading="lazy">
+                <div class="slide-content">
+                    <h2 class="slide-title">${item.title}</h2>
+                    <p class="slide-desc">${item.description}</p>
+                    <a href="${item.link}" class="recipe-btn">${item.buttonText}</a>
+                </div>
+            `;
+            wrapper.appendChild(slide);
+        });
+
+        // 3. Initialize Swiper
+        new Swiper(".swiper-recipe", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            loop: true,
+            speed: 750,
+            watchSlidesProgress: true,
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 80,
+                modifier: 1,
+                slideShadows: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            autoplay: {
+                delay: 4500,
+                disableOnInteraction: false,
+            }
+        });
+    }
+
+    // Load implementation
+    if (document.readyState === 'complete') {
+        initRecipeCarousel();
+    } else {
+        window.addEventListener('load', initRecipeCarousel);
+    }
+</script>
