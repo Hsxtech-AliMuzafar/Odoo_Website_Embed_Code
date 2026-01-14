@@ -1,0 +1,269 @@
+<!-- 
+  Odoo Website Embed Code Snippet
+  Component: Interactive Farm-to-Fork Journey
+  Author: Ali Muzafar (Hsx TECH)
+  Brand: Legacy Maker Meats
+  How to Use: Copy this entire code into an "Embed Code" block in Odoo.
+-->
+
+<style>
+    :root {
+        --legacy-red: #720528;
+        --light-bg: #F5F0F1;
+        --white: #ffffff;
+        --gray: #666666;
+        --line-color: #E0D8D9;
+    }
+
+    .timeline-section {
+        padding: 80px 20px;
+        background: var(--white);
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        overflow: hidden;
+    }
+
+    .timeline-container {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    /* Vertical Line */
+    .timeline-container::after {
+        content: '';
+        position: absolute;
+        width: 3px;
+        background-color: var(--line-color);
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -1.5px;
+        z-index: 1;
+    }
+
+    /* Timeline Items */
+    .timeline-item {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+        box-sizing: border-box;
+        z-index: 2;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .timeline-item.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .timeline-item.left {
+        left: 0;
+    }
+
+    .timeline-item.right {
+        left: 50%;
+    }
+
+    /* Dots */
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: -10px;
+        background-color: var(--white);
+        border: 4px solid var(--legacy-red);
+        top: 30px;
+        border-radius: 50%;
+        z-index: 3;
+        transition: transform 0.3s ease;
+    }
+
+    .timeline-item.right::after {
+        left: -10px;
+    }
+
+    .timeline-item:hover::after {
+        transform: scale(1.3);
+        background-color: var(--legacy-red);
+    }
+
+    /* Content Cards */
+    .timeline-content {
+        padding: 25px;
+        background-color: var(--light-bg);
+        position: relative;
+        border-radius: 12px;
+        border-left: 5px solid var(--legacy-red);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .timeline-item.right .timeline-content {
+        border-left: none;
+        border-right: 5px solid var(--legacy-red);
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(114, 5, 40, 0.1);
+    }
+
+    .timeline-step {
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--legacy-red);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .timeline-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 12px;
+    }
+
+    .timeline-description {
+        font-size: 14px;
+        color: var(--gray);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+        .timeline-container::after {
+            left: 31px;
+        }
+
+        .timeline-item {
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 25px;
+        }
+
+        .timeline-item.right {
+            left: 0%;
+        }
+
+        .timeline-item::after {
+            left: 21px;
+            right: auto;
+        }
+
+        .timeline-item.right::after {
+            left: 21px;
+        }
+
+        .timeline-item.right .timeline-content {
+            border-right: none;
+            border-left: 5px solid var(--legacy-red);
+        }
+    }
+</style>
+
+<section class="timeline-section">
+    <div class="timeline-container" id="timeline-container">
+        <!-- Items will be injected by JS -->
+    </div>
+</section>
+
+<script>
+    const TIMELINE_DATA = [
+        {
+            step: "The Source",
+            title: "Our Private Indiana Farm",
+            description: "Every cut comes from a single animal, raised right here in our pastures. 100% traceable, no middlemen, no mystery meat.",
+            side: "left",
+            icon: `<svg viewBox="0 0 24 24"><path d="M12,3L4,9V21H20V9L12,3M10,19H7V15H10V19M17,19H14V11H17V19M12,13L9,11L12,9L15,11L12,13Z"/></svg>`
+        },
+        {
+            step: "Sustainability",
+            title: "100% Closed-Loop Ag",
+            description: "Our carbon-negative operation powers 5,000 homes with renewable energy. We extract value from every byproduct, saving tons of CO2 yearly.",
+            side: "right",
+            icon: `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M15,11.5V5H9V11.5L12,14.5L15,11.5Z"/></svg>`
+        },
+        {
+            step: "Ethical Raising",
+            title: "Patience and Nature",
+            description: "No growth promoters. Ever. Our cattle are raised slowly on an all-natural diet unique to our 50% Prime-grade sustainability model.",
+            side: "left",
+            icon: `<svg viewBox="0 0 24 24"><path d="M17,8C8,8 4,16 4,16C4,16 8,8 17,8Z M17,8L17,10 M17,10L17,12 M17,12L17,14 M17,14L17,16 M17,10C21,10 22,12 22,12C22,12 21,14 17,14"/></svg>`
+        },
+        {
+            step: "Flavor Prep",
+            title: "Artisan Dry Aging",
+            description: "The entire yield is dry-aged for 7-14 days. This natural process lowers moisture for a buttery, robust flavor grocery stores can't match.",
+            side: "right",
+            icon: `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"/></svg>`
+        },
+        {
+            step: "Master Craft",
+            title: "Hand-Cut Seam Boning",
+            description: "Meticulous knife carving along natural muscle seams ensures optimally defined cuts that cook better—a standard factory operations can't meet.",
+            side: "left",
+            icon: `<svg viewBox="0 0 24 24"><path d="M19.7,2.3L15.4,6.6L16,7.2L12,11.2L12.8,12L13.4,11.4L18.6,16.6L19.4,15.8L14.2,10.6L14.8,10L18.8,14L19.4,13.4L15.4,9.4L16,8.8L20.3,4.5L19.7,2.3Z"/></svg>`
+        },
+        {
+            step: "Your Table",
+            title: "Transparency & Quality",
+            description: "SQF Certified and USDA inspected. From our pasture to your plate, you get the consistency and peace of mind you deserve.",
+            side: "right",
+            icon: `<svg viewBox="0 0 24 24"><path d="M11,9H13V7H11V9M11,17H13V11H11V17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>`
+        }
+    ];
+
+    function initTimeline() {
+        const container = document.getElementById('timeline-container');
+        if (!container) return;
+
+        TIMELINE_DATA.forEach((item, index) => {
+            const itemElement = document.createElement('div');
+            itemElement.className = `timeline-item ${item.side}`;
+            itemElement.innerHTML = `
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <div class="timeline-icon">${item.icon}</div>
+                        <div class="timeline-content-text">
+                            <span class="timeline-step">Step ${index + 1}: ${item.step}</span>
+                            <h3 class="timeline-title">${item.title}</h3>
+                        </div>
+                    </div>
+                    <p class="timeline-description">${item.description}</p>
+                </div>
+            `;
+            container.appendChild(itemElement);
+        });
+
+        // Scroll Reveal Logic
+        const observerOptions = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+    }
+
+    // Load implementation
+    if (document.readyState === 'complete') {
+        initTimeline();
+    } else {
+        window.addEventListener('load', initTimeline);
+    }
+</script>

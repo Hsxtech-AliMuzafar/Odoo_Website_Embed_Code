@@ -1,0 +1,213 @@
+<!-- 
+  Odoo Website Embed Code Snippet
+  Component: Mobile-Optimized Farm-to-Fork Journey
+  Author: Ali Muzafar (Hsx TECH)
+  Brand: Legacy Maker Meats
+  Note: This is a dedicated mobile-first version of the timeline.
+-->
+
+<style>
+    :root {
+        --legacy-red: #720528;
+        --light-bg: #F5F0F1;
+        --white: #ffffff;
+        --gray: #666666;
+        --accent-pink: rgba(255, 168, 196, 0.2);
+    }
+
+    .mobile-timeline-section {
+        padding: 40px 15px;
+        background: var(--light-bg);
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    .m-timeline-container {
+        position: relative;
+        max-width: 500px;
+        margin: 0 auto;
+        padding-left: 30px;
+        /* Space for the line */
+    }
+
+    /* Vertical Line */
+    .m-timeline-container::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--legacy-red), var(--light-bg));
+    }
+
+    .m-timeline-item {
+        position: relative;
+        margin-bottom: 40px;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.5s ease-out;
+    }
+
+    .m-timeline-item.revealed {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Indicator Dot */
+    .m-timeline-dot {
+        position: absolute;
+        left: -39px;
+        top: 0;
+        width: 16px;
+        height: 16px;
+        background: var(--white);
+        border: 3px solid var(--legacy-red);
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    .m-timeline-content {
+        background: var(--light-bg);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid var(--legacy-red);
+    }
+
+    .m-timeline-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .m-timeline-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--white);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .m-timeline-icon svg {
+        width: 22px;
+        height: 22px;
+        fill: var(--legacy-red);
+    }
+
+    .m-timeline-step-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .m-timeline-step-tag {
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--legacy-red);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .m-timeline-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+
+    .m-timeline-desc {
+        font-size: 13.5px;
+        color: var(--gray);
+        line-height: 1.5;
+        margin: 0;
+    }
+</style>
+
+<section class="mobile-timeline-section">
+    <div class="m-timeline-container" id="mobile-timeline-list">
+        <!-- Injected via JS -->
+    </div>
+</section>
+
+<script>
+    const M_TIMELINE_DATA = [
+        {
+            tag: "Source",
+            title: "Private Indiana Farm",
+            desc: "100% traceable, single-animal source. Every cut is born and raised on our local grounds.",
+            icon: `<svg viewBox="0 0 24 24"><path d="M12,3L4,9V21H20V9L12,3M10,19H7V15H10V19M17,19H14V11H17V19M12,13L9,11L12,9L15,11L12,13Z"/></svg>`
+        },
+        {
+            tag: "Eco-Logic",
+            title: "Closed-Loop Ag",
+            desc: "Carbon-negative power for 5,000 homes. Zero waste, total sustainability.",
+            icon: `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M15,11.5V5H9V11.5L12,14.5L15,11.5Z"/></svg>`
+        },
+        {
+            tag: "Ethics",
+            title: "Natural Raising",
+            desc: "Raised slowly. No hormones. No growth promoters. Just nature's schedule.",
+            icon: `<svg viewBox="0 0 24 24"><path d="M17,8C8,8 4,16 4,16C4,16 8,8 17,8Z M17,8L17,10 M17,10L17,12 M17,12L17,14 M17,14L17,16 M17,10C21,10 22,12 22,12C22,12 21,14 17,14"/></svg>`
+        },
+        {
+            tag: "Process",
+            title: "Artisan Dry Aging",
+            desc: "7-14 days of aging to create that distinctively rich, buttery steak flavor.",
+            icon: `<svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"/></svg>`
+        },
+        {
+            tag: "Hand Cut",
+            title: "Seam Boning",
+            desc: "Meticulous knife work along natural muscle seams for the perfect culinary cut.",
+            icon: `<svg viewBox="0 0 24 24"><path d="M19.7,2.3L15.4,6.6L16,7.2L12,11.2L12.8,12L13.4,11.4L18.6,16.6L19.4,15.8L14.2,10.6L14.8,10L18.8,14L19.4,13.4L15.4,9.4L16,8.8L20.3,4.5L19.7,2.3Z"/></svg>`
+        },
+        {
+            tag: "Delivery",
+            title: "Pasture to Plate",
+            desc: "Single-source traceability you can trust, delivered directly with zero middlemen.",
+            icon: `<svg viewBox="0 0 24 24"><path d="M11,9H13V7H11V9M11,17H13V11H11V17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"/></svg>`
+        }
+    ];
+
+    function initMobileTimeline() {
+        const list = document.getElementById('mobile-timeline-list');
+        if (!list) return;
+
+        M_TIMELINE_DATA.forEach((item, index) => {
+            const el = document.createElement('div');
+            el.className = 'm-timeline-item';
+            el.innerHTML = `
+                <div class="m-timeline-dot"></div>
+                <div class="m-timeline-content">
+                    <div class="m-timeline-header">
+                        <div class="m-timeline-icon">${item.icon}</div>
+                        <div class="m-timeline-step-info">
+                            <span class="m-timeline-step-tag">Step ${index + 1}: ${item.tag}</span>
+                            <h4 class="m-timeline-title">${item.title}</h4>
+                        </div>
+                    </div>
+                    <p class="m-timeline-desc">${item.desc}</p>
+                </div>
+            `;
+            list.appendChild(el);
+        });
+
+        // Intersection Observer for scroll effect
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.m-timeline-item').forEach(i => obs.observe(i));
+    }
+
+    if (document.readyState === 'complete') initMobileTimeline();
+    else window.addEventListener('load', initMobileTimeline);
+</script>
