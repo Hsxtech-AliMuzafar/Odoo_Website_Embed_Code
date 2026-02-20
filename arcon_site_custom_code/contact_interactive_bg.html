@@ -1,0 +1,228 @@
+<div id="thankYouSection" class="odoo-custom-snippet">
+    <style>
+        #thankYouSection {
+            --primary: #D5264D;
+            --bg-deep: #270B3E;
+            --dark: #1B050A;
+            --accent: #E9E7EC;
+
+            position: relative;
+            width: 100%;
+            min-height: 800px;
+            background-color: var(--dark);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+        }
+
+        #thankYouSection canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Content Overlay - designed to be behind an Odoo form */
+        #thankYouSection .content-overlay {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 40px;
+        }
+
+        #thankYouSection h2 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(213, 38, 77, 0.4));
+        }
+
+        #thankYouSection p {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: rgba(233, 231, 236, 0.9);
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* Success Icon Glow */
+        #thankYouSection .success-glow {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: rgba(213, 38, 77, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(213, 38, 77, 0.3);
+            animation: pulse-success 2s infinite;
+        }
+
+        @keyframes pulse-success {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(213, 38, 77, 0.3);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 50px rgba(213, 38, 77, 0.5);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(213, 38, 77, 0.3);
+            }
+        }
+
+        #thankYouSection .success-glow svg {
+            width: 60px;
+            height: 60px;
+            fill: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            #thankYouSection {
+                min-height: 700px;
+            }
+
+            #thankYouSection .content-overlay {
+                padding: 20px;
+            }
+        }
+    </style>
+
+    <canvas id="contactCanvas"></canvas>
+
+    <div class="content-overlay">
+        <div class="success-glow">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+            </svg>
+        </div>
+        <h2>Thank You for Contacting Us</h2>
+        <p>We will get back to you ASAP.</p>
+    </div>
+
+    <script>
+        (function () {
+            const container = document.getElementById('thankYouSection');
+            const canvas = document.getElementById('contactCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const mouse = { x: null, y: null, radius: 150 };
+
+            function init() {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+                particles = [];
+                const numberOfParticles = (canvas.width * canvas.height) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * 1) - 0.5;
+                    let directionY = (Math.random() * 1) - 0.5;
+                    let color = '#D5264D';
+
+                    particles.push(new Particle(x, y, directionX, directionY, size, color));
+                }
+            }
+
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.directionX = directionX;
+                    this.directionY = directionY;
+                    this.size = size;
+                    this.color = color;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                    if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+
+                    // Mouse interactivity
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 3;
+                        if (mouse.x > this.x && this.x > this.size * 10) this.x -= 3;
+                        if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 3;
+                        if (mouse.y > this.y && this.y > this.size * 10) this.y -= 3;
+                    }
+
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                    this.draw();
+                }
+            }
+
+            function connect() {
+                let opacityValue = 1;
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
+                            + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
+                        if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                            opacityValue = 1 - (distance / 20000);
+                            ctx.strokeStyle = 'rgba(213, 38, 77,' + opacityValue + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                }
+                connect();
+            }
+
+            window.addEventListener('mousemove', function (event) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = event.clientX - rect.left;
+                mouse.y = event.clientY - rect.top;
+            });
+
+            window.addEventListener('resize', function () {
+                init();
+            });
+
+            window.addEventListener('mouseout', function () {
+                mouse.x = undefined;
+                mouse.y = undefined;
+            });
+
+            init();
+            animate();
+        })();
+    </script>
+</div>

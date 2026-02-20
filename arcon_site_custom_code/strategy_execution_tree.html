@@ -1,0 +1,392 @@
+<div id="strategyTreeSection" class="odoo-custom-snippet">
+    <style>
+        /* Scoped Styles to avoid Odoo collisions */
+        #strategyTreeSection {
+            --primary: #D5264D;
+            --bg-deep: #270B3E;
+            --text-light: #E9E7EC;
+            --dark: #1B050A;
+            --glass: rgba(39, 11, 62, 0.6);
+
+            position: relative;
+            width: 100%;
+            min-height: 950px;
+            /* Ensure Odoo sees a height */
+            background: radial-gradient(circle at center, var(--bg-deep), var(--dark));
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+        }
+
+        #strategyTreeSection .tech-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        #strategyTreeSection .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(213, 38, 77, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(213, 38, 77, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #strategyTreeSection .tree-content {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            height: 800px;
+            z-index: 10;
+        }
+
+        /* SVG Connections */
+        #strategyTreeSection .tree-svg {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        #strategyTreeSection .tree-path {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        #strategyTreeSection .animate-draw {
+            animation: treeDraw 2.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes treeDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Generic Node Styling */
+        #strategyTreeSection .node {
+            position: absolute;
+            z-index: 20;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(233, 231, 236, 0.1);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+            left: 50%;
+            transform: translate(-50%, -20px);
+            box-sizing: border-box;
+        }
+
+        #strategyTreeSection .node.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        #strategyTreeSection .node h4 {
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+        }
+
+        #strategyTreeSection .node p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: rgba(233, 231, 236, 0.9);
+        }
+
+        /* Layout Positions (Top-Down) */
+        #strategyTreeSection .node-root {
+            top: 0;
+            background: none;
+            border: none;
+            backdrop-filter: none;
+            box-shadow: none;
+            max-width: 100%;
+        }
+
+        #strategyTreeSection .node-root h2 {
+            font-size: clamp(2.2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(213, 38, 77, 0.4));
+        }
+
+        #strategyTreeSection .node-trunk {
+            top: 180px;
+            max-width: 450px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Branch Row specific behavior */
+        #strategyTreeSection .branch-row {
+            position: absolute;
+            top: 400px;
+            width: 100%;
+            max-width: 1100px;
+            /* Match SVG viewbox */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            /* Keep cards aligned with path ends */
+            z-index: 20;
+            left: 50%;
+            transform: translateX(-50%);
+            box-sizing: border-box;
+        }
+
+        #strategyTreeSection .node-branch {
+            position: relative !important;
+            left: auto !important;
+            transform: translateY(-20px) !important;
+            width: 30%;
+            max-width: 320px;
+            margin: 0;
+        }
+
+        #strategyTreeSection .node-branch.visible {
+            opacity: 1;
+            transform: translateY(0) !important;
+        }
+
+        #strategyTreeSection .node-leaf {
+            top: 700px;
+            max-width: 700px;
+            background: rgba(213, 38, 77, 0.15);
+            border: 1px dashed var(--primary);
+        }
+
+        /* Insight Text Layer */
+        #strategyTreeSection .insight-layer {
+            position: absolute;
+            top: 330px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            color: rgba(233, 231, 236, 0.45);
+            font-size: 1rem;
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #strategyTreeSection .insight-layer.visible {
+            opacity: 1;
+        }
+
+        /* Node Highlight Pulsing */
+        #strategyTreeSection .pulse-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--primary);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.8;
+            }
+
+            70% {
+                transform: translateX(-50%) scale(2.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            #strategyTreeSection {
+                height: auto;
+                min-height: auto;
+            }
+
+            #strategyTreeSection .tree-content {
+                height: auto;
+            }
+
+            #strategyTreeSection .node {
+                position: static;
+                transform: none !important;
+                opacity: 1;
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            #strategyTreeSection .branch-row {
+                position: static;
+                flex-direction: column;
+            }
+
+            #strategyTreeSection .node-branch {
+                width: 100%;
+            }
+
+            #strategyTreeSection .tree-svg,
+            #strategyTreeSection .insight-layer,
+            #strategyTreeSection .grid-overlay,
+            #strategyTreeSection .tech-canvas {
+                display: none;
+            }
+        }
+    </style>
+
+    <canvas class="tech-canvas" id="treeCanvas"></canvas>
+    <div class="grid-overlay"></div>
+
+    <div class="tree-content">
+        <!-- SVG Connections -->
+        <svg class="tree-svg" viewBox="0 0 1100 800">
+            <!-- Root to Trunk -->
+            <path class="tree-path" id="treeP1" d="M 550 80 L 550 180" />
+
+            <!-- Trunk to Branches -->
+            <path class="tree-path" id="treeP2" d="M 550 280 C 550 340, 180 340, 180 400" />
+            <path class="tree-path" id="treeP3" d="M 550 300 L 550 400" />
+            <path class="tree-path" id="treeP4" d="M 550 280 C 550 340, 920 340, 920 400" />
+
+            <!-- Branches to Final -->
+            <path class="tree-path" id="treeP5" d="M 180 500 C 180 600, 550 600, 550 700" />
+            <path class="tree-path" id="treeP6" d="M 550 500 L 550 700" />
+            <path class="tree-path" id="treeP7" d="M 920 500 C 920 600, 550 600, 550 700" />
+        </svg>
+
+        <!-- Nodes Structure -->
+        <div class="node node-root visible">
+            <h2>From Strategy to Execution</h2>
+        </div>
+
+        <div class="node node-trunk" id="treeT1">
+            <p>We bridge the gap between business thinking and system engineering.</p>
+        </div>
+
+        <div class="insight-layer" id="treeI1">
+            <span>"Strategy without execution fails."</span>
+            <span>"Execution without strategy wastes resources."</span>
+        </div>
+
+        <div class="branch-row">
+            <div class="node node-branch" id="treeB1">
+                <div class="pulse-point"></div>
+                <h4>Strategy</h4>
+                <p>Defining objectives, analyzing processes, and designing structured solutions.</p>
+            </div>
+            <div class="node node-branch" id="treeB2">
+                <div class="pulse-point"></div>
+                <h4>Architecture</h4>
+                <p>Translating business needs into scalable system logic and workflows.</p>
+            </div>
+            <div class="node node-branch" id="treeB3">
+                <div class="pulse-point"></div>
+                <h4>Development</h4>
+                <p>Engineering reliable, maintainable, and high-performance Odoo solutions.</p>
+            </div>
+        </div>
+
+        <div class="node node-leaf" id="treeL1">
+            <h4>Integrated Solution Lifecycle</h4>
+            <p>Our methodology unifies consulting, architecture, and development into one cohesive journey, ensuring
+                results that scale.</p>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Self-contained script to avoid Odoo scope issues
+            const container = document.getElementById('strategyTreeSection');
+            const canvas = container.querySelector('.tech-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function setupCanvas() {
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+            }
+            window.addEventListener('resize', setupCanvas);
+            setupCanvas();
+
+            class P {
+                constructor() { this.init(); }
+                init() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.v = (Math.random() - 0.5) * 0.4;
+                }
+                update() {
+                    this.y += this.v;
+                    if (this.y < 0 || this.y > canvas.height) this.init();
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 1, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(213, 38, 77, 0.4)';
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < 30; i++) particles.push(new P());
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(loop);
+            }
+            loop();
+
+            // Sequential Animation
+            const wait = (ms) => new Promise(r => setTimeout(r, ms));
+            async function play() {
+                await wait(800);
+                document.getElementById('treeP1').classList.add('animate-draw');
+                await wait(1500);
+                document.getElementById('treeT1').classList.add('visible');
+                await wait(1000);
+                document.getElementById('treeI1').classList.add('visible');
+                await wait(500);
+                ['treeP2', 'treeP3', 'treeP4'].forEach(id => document.getElementById(id).classList.add('animate-draw'));
+                await wait(1800);
+                ['treeB1', 'treeB2', 'treeB3'].forEach((id, i) => setTimeout(() => {
+                    document.getElementById(id).classList.add('visible');
+                }, i * 300));
+                await wait(1500);
+                ['treeP5', 'treeP6', 'treeP7'].forEach(id => document.getElementById(id).classList.add('animate-draw'));
+                await wait(1800);
+                document.getElementById('treeL1').classList.add('visible');
+            }
+            play();
+        })();
+    </script>
+</div>

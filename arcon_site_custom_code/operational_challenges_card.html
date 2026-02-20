@@ -1,0 +1,179 @@
+<div id="weHelpInAllWidget" class="odoo-custom-snippet">
+    <style>
+        #weHelpInAllWidget {
+            --primary: #D5264D;
+            --accent-light: #F8F9FA;
+            --text-dark: #1B050A;
+            --glass-light: rgba(255, 255, 255, 0.7);
+
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 250px;
+            background: var(--accent-light);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        #weHelpInAllWidget canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        #weHelpInAllWidget .content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            background: var(--glass-light);
+            padding: 20px 40px;
+            border-radius: 40px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        #weHelpInAllWidget h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        #weHelpInAllWidget .particle-hint {
+            position: absolute;
+            bottom: 12px;
+            font-size: 0.65rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 5;
+        }
+    </style>
+
+    <canvas id="weHelpCanvas"></canvas>
+
+    <div class="content">
+        <h2>We Help in All</h2>
+    </div>
+
+    <div class="particle-hint">Move cursor to interact</div>
+
+    <script>
+        (function () {
+            const container = document.getElementById('weHelpInAllWidget');
+            const canvas = document.getElementById('weHelpCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const mouse = { x: null, y: null, radius: 100 };
+
+            function init() {
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+                particles = [];
+                // Dynamic density based on size
+                const numberOfParticles = (canvas.width * canvas.height) / 7000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 1.5) + 0.5;
+                    let x = (Math.random() * (canvas.width));
+                    let y = (Math.random() * (canvas.height));
+                    let directionX = (Math.random() * 0.8) - 0.4;
+                    let directionY = (Math.random() * 0.8) - 0.4;
+
+                    particles.push(new PType(x, y, directionX, directionY, size));
+                }
+            }
+
+            class PType {
+                constructor(x, y, dx, dy, size) {
+                    this.x = x;
+                    this.y = y;
+                    this.dx = dx;
+                    this.dy = dy;
+                    this.size = size;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = '#D5264D';
+                    ctx.fill();
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+                    if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+
+                    // Mouse Interaction
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 1.5;
+                        if (mouse.x > this.x && this.x > this.size * 10) this.x -= 1.5;
+                        if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 1.5;
+                        if (mouse.y > this.y && this.y > this.size * 10) this.y -= 1.5;
+                    }
+
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    this.draw();
+                }
+            }
+
+            function connect() {
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
+                            + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
+                        if (distance < (canvas.width / 5) * (canvas.height / 5)) {
+                            let opacity = 1 - (distance / 15000);
+                            ctx.strokeStyle = 'rgba(213, 38, 77,' + opacity * 0.3 + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                }
+                connect();
+                requestAnimationFrame(animate);
+            }
+
+            container.addEventListener('mousemove', function (event) {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = event.clientX - rect.left;
+                mouse.y = event.clientY - rect.top;
+            });
+
+            container.addEventListener('mouseleave', function () {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            window.addEventListener('resize', init);
+            init();
+            animate();
+        })();
+    </script>
+</div>

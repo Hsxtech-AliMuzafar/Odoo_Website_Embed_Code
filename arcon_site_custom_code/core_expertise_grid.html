@@ -1,0 +1,296 @@
+<div id="expertiseSliderSection" class="odoo-custom-snippet">
+    <style>
+        #expertiseSliderSection {
+            --primary: #D5264D;
+            --secondary: #270B3E;
+            --bg-light: #E9E7EC;
+            --white: #ffffff;
+            --text-muted: #666;
+            --transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+
+            position: relative;
+            width: 100%;
+            min-height: 700px;
+            background: var(--white);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 80px 0;
+        }
+
+        #expertiseSliderSection .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+
+        #expertiseSliderSection .header p {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        #expertiseSliderSection .header h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            font-weight: 900;
+        }
+
+        #expertiseSliderSection .slider-container {
+            display: flex;
+            width: 100%;
+            height: 500px;
+            gap: 1px;
+            background: rgba(0, 0, 0, 0.05);
+            /* Divider lines */
+        }
+
+        #expertiseSliderSection .panel {
+            position: relative;
+            flex: 1;
+            height: 100%;
+            background: var(--white);
+            cursor: pointer;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            border-top: 4px solid transparent;
+        }
+
+        /* Hover Expansion */
+        #expertiseSliderSection .panel:hover {
+            flex: 3;
+            background: var(--bg-light);
+            border-top-color: var(--primary);
+        }
+
+        /* Panel Content Organization */
+        #expertiseSliderSection .panel-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        #expertiseSliderSection .icon-box {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        #expertiseSliderSection .panel:hover .icon-box {
+            transform: scale(1.2);
+        }
+
+        #expertiseSliderSection .title-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #expertiseSliderSection .panel h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--secondary);
+            white-space: nowrap;
+            margin: 0;
+            transition: var(--transition);
+        }
+
+        /* Content Revealed on Hover */
+        #expertiseSliderSection .content-revealed {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            pointer-events: none;
+            max-width: 400px;
+        }
+
+        #expertiseSliderSection .panel:hover .content-revealed {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            margin-top: 20px;
+        }
+
+        #expertiseSliderSection .content-revealed p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        #expertiseSliderSection .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: var(--primary);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Inactive States */
+        #expertiseSliderSection .slider-container:has(.panel:hover) .panel:not(:hover) {
+            opacity: 0.6;
+            filter: grayscale(0.8);
+        }
+
+        /* Mobile Viewports */
+        @media (max-width: 900px) {
+            #expertiseSliderSection .slider-container {
+                flex-direction: column;
+                height: auto;
+                gap: 15px;
+                padding: 0 20px;
+                background: none;
+            }
+
+            #expertiseSliderSection .panel {
+                flex: none !important;
+                height: auto;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                border-radius: 12px;
+                padding: 30px;
+            }
+
+            #expertiseSliderSection .content-revealed {
+                opacity: 1;
+                transform: none;
+                pointer-events: auto;
+                margin-top: 15px;
+            }
+
+            #expertiseSliderSection .panel h3 {
+                white-space: normal;
+            }
+        }
+    </style>
+
+    <div class="header">
+        <p>Core Expertise</p>
+        <h2>Strategic Focus Areas</h2>
+    </div>
+
+    <div class="slider-container">
+        <!-- Panel 1: Process Analysis -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="icon-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D5264D" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4M12 8h.01" />
+                    </svg>
+                </div>
+                <div class="title-wrapper">
+                    <h3>Process Analysis</h3>
+                </div>
+                <div class="content-revealed">
+                    <p>We dissect operational workflows to identify hidden bottlenecks and structural inefficiencies
+                        that prevent growth.</p>
+                    <span class="tag">Operational Excellence</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 2: Odoo Architecture -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="icon-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D5264D" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                </div>
+                <div class="title-wrapper">
+                    <h3>Odoo Architecture</h3>
+                </div>
+                <div class="content-revealed">
+                    <p>Designing scalable data models and seamless business logic within the Odoo ecosystem for
+                        long-term reliability.</p>
+                    <span class="tag">System Engineering</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 3: BI Dashboards -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="icon-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D5264D" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18" />
+                        <path d="M18 17V9" />
+                        <path d="M13 17V5" />
+                        <path d="M8 17v-3" />
+                    </svg>
+                </div>
+                <div class="title-wrapper">
+                    <h3>BI Dashboards</h3>
+                </div>
+                <div class="content-revealed">
+                    <p>Turning fragmented business data into interactive, real-time visual insights that drive confident
+                        decision-making.</p>
+                    <span class="tag">Data Intelligence</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 4: Optimized Workflows -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="icon-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D5264D" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+                <div class="title-wrapper">
+                    <h3>Optimized Workflows</h3>
+                </div>
+                <div class="content-revealed">
+                    <p>Automating repetitive tasks and standardizing procedures to increase speed and decrease human
+                        error.</p>
+                    <span class="tag">Automation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 5: Data Logic -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="icon-box">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D5264D" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </svg>
+                </div>
+                <div class="title-wrapper">
+                    <h3>Data Logic</h3>
+                </div>
+                <div class="content-revealed">
+                    <p>Ensuring absolute data integrity through rigorous validation and optimized database reporting
+                        structures.</p>
+                    <span class="tag">Integrity & Scale</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
