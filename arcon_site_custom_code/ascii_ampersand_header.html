@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #D5264D;
+            --secondary-color: #270B3E;
+            --accent-color: #E9E7EC;
+            --dark-color: #1B050A;
+        }
+
+        .ascii-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-color: transparent;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .ascii-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ampersand {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 62px;
+            font-weight: 900;
+            color: var(--primary-color);
+            display: inline-block;
+            animation: moveAmpersand 4s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(213, 38, 77, 0.4);
+            user-select: none;
+        }
+
+        .header-line {
+            height: 2px;
+            flex-grow: 1;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            opacity: 0.6;
+            min-width: 100px;
+        }
+
+        @keyframes moveAmpersand {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        /* Ambient glow effect */
+        .glow-overlay {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            opacity: 0.15;
+            filter: blur(20px);
+            pointer-events: none;
+            animation: glowFollow 4s ease-in-out infinite;
+        }
+
+        @keyframes glowFollow {
+            0%, 100% {
+                transform: translate(-50%, -50%) translate(0, 0);
+            }
+            50% {
+                transform: translate(-50%, -50%) translate(0, -15px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ascii-header-container">
+    <div class="header-line"></div>
+    <div class="ascii-content">
+        <div class="ampersand">&</div>
+    </div>
+    <div class="header-line"></div>
+</div>
+
+</body>
+</html>

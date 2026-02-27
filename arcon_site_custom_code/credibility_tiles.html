@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #D5264D;
+            --secondary-color: #270B3E;
+            --accent-color: #E9E7EC;
+            --dark-color: #1B050A;
+            --glass-bg: rgba(39, 11, 62, 0.4);
+            --glass-border: rgba(233, 231, 236, 0.1);
+            --transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        body {
+            background-color: #270B3E;
+            color: var(--accent-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 4rem 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .credibility-section {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 4rem;
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #fff, #bbb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tile {
+            position: relative;
+            height: 280px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        /* Ambient Glow Layer */
+        .tile::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
+                    rgba(213, 38, 77, 0.25) 0%,
+                    transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tile:hover::before {
+            opacity: 1;
+        }
+
+        /* The "Cover" Layer */
+        .tile-cover {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: var(--transition);
+            background: var(--glass-bg);
+        }
+
+        .tile:hover .tile-cover {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .tile-icon {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .tile-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* The "Data" (Uncover) Layer */
+        .tile-data {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+            z-index: 1;
+        }
+
+        .tile:hover .tile-data {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .data-bits {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin-top: 0.5rem;
+        }
+
+        .data-header {
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .tile-border-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, var(--primary-color), transparent, var(--primary-color)) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 3;
+        }
+
+        .tile:hover .tile-border-glow {
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .tiles-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tiles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="credibility-section">
+        <h2 class="section-title">Structured Engineering Principles</h2>
+
+        <div class="tiles-grid">
+            <!-- Tile 1 -->
+            <div class="tile" onmousemove="handleMove(event, this)">
+                <div class="tile-border-glow"></div>
+                <div class="tile-cover">
+                    <svg class="tile-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m7.5 4.27 9 5.15"></path>
+                        <path
+                            d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                        </path>
+                        <path d="m3.3 7 8.7 5 8.7-5"></path>
+                        <path d="M12 22V12"></path>
+                    </svg>
+                    <span class="tile-title">Modular Architecture</span>
+                </div>
+                <div class="tile-data">
+                    <div class="data-header">Status: Scalable</div>
+                    <div class="data-bits">
+                        • Component-based design<br>
+                        • Low coupling / High cohesion<br>
+                        • Reusable logic blocks
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 2 -->
+            <div class="tile" onmousemove="handleMove(event, this)">
+                <div class="tile-border-glow"></div>
+                <div class="tile-cover">
+                    <svg class="tile-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 3h12"></path>
+                        <path d="M6 8h12"></path>
+                        <path d="M6 13h12"></path>
+                        <path d="M6 18h12"></path>
+                    </svg>
+                    <span class="tile-title">Version Discipline</span>
+                </div>
+                <div class="tile-data">
+                    <div class="data-header">GIT Traceability</div>
+                    <div class="data-bits">
+                        • Atomic commits only<br>
+                        • Structured branch strategy<br>
+                        • Rigorous PR reviews
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 3 -->
+            <div class="tile" onmousemove="handleMove(event, this)">
+                <div class="tile-border-glow"></div>
+                <div class="tile-cover">
+                    <svg class="tile-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <line x1="10" y1="9" x2="8" y2="9"></line>
+                    </svg>
+                    <span class="tile-title">Clean Docs</span>
+                </div>
+                <div class="tile-data">
+                    <div class="data-header">Self-Documenting</div>
+                    <div class="data-bits">
+                        • Inline technical specs<br>
+                        • Detailed README assets<br>
+                        • API contract clarity
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 4 -->
+            <div class="tile" onmousemove="handleMove(event, this)">
+                <div class="tile-border-glow"></div>
+                <div class="tile-cover">
+                    <svg class="tile-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span class="tile-title">Performance</span>
+                </div>
+                <div class="tile-data">
+                    <div class="data-header">Optimized Core</div>
+                    <div class="data-bits">
+                        • Index-driven SQL<br>
+                        • O(n) logic constraints<br>
+                        • Minimal RPC overhead
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 5 -->
+            <div class="tile" onmousemove="handleMove(event, this)">
+                <div class="tile-border-glow"></div>
+                <div class="tile-cover">
+                    <svg class="tile-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span class="tile-title">Scalability</span>
+                </div>
+                <div class="tile-data">
+                    <div class="data-header">Future Ready</div>
+                    <div class="data-bits">
+                        • Multi-tenant logic<br>
+                        • High load caching<br>
+                        • Distributed architecture
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function handleMove(e, tile) {
+            const rect = tile.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            tile.style.setProperty('--x', x + '%');
+            tile.style.setProperty('--y', y + '%');
+        }
+    </script>
+
+</body>
+
+</html>

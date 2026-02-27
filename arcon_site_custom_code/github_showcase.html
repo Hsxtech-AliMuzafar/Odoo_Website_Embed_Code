@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcon | GitHub Showcase</title>
+    <style>
+        :root {
+            --primary-color: #D5264D;
+            --secondary-color: #270B3E;
+            --accent-color: #E9E7EC;
+            --dark-color: #1B050A;
+            --glass-bg: rgba(39, 11, 62, 0.4);
+            --glass-border: rgba(233, 231, 236, 0.1);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #270B3E;
+            color: var(--accent-color);
+            padding: 4rem 2rem;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .showcase-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .showcase-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #fff, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .showcase-subtitle {
+            font-size: 1.1rem;
+            color: rgba(233, 231, 236, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--accent-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(213, 38, 77, 0.4);
+        }
+
+        /* Grid Layout */
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .repo-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            animation: cardFadeIn 0.6s ease forwards;
+        }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .repo-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(213, 38, 77, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .repo-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .category-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .repo-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .repo-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(233, 231, 236, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .repo-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(233, 231, 236, 0.05);
+            border: 1px solid rgba(233, 231, 236, 0.1);
+            border-radius: 4px;
+            color: rgba(233, 231, 236, 0.6);
+        }
+
+        .view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            width: fit-content;
+        }
+
+        .view-btn:hover {
+            background: var(--accent-color);
+            color: var(--dark-color);
+        }
+
+        /* Hidden Class for Filtering */
+        .repo-card.hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .repo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="showcase-container">
+        <header class="showcase-header">
+            <h2 class="showcase-title">Featured Ecosystem</h2>
+            <p class="showcase-subtitle">Architectural excellence across Odoo development, system automation, and data
+                engineering.</p>
+        </header>
+
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">All Repositories</button>
+            <button class="filter-btn" data-filter="modules">Odoo Modules</button>
+            <button class="filter-btn" data-filter="automation">Automation</button>
+            <button class="filter-btn" data-filter="bi">BI & SQL</button>
+            <button class="filter-btn" data-filter="utilities">Utilities</button>
+        </div>
+
+
+        <div class="repo-grid" id="repoGrid">
+            <!-- Odoo Modules -->
+            <div class="repo-card" data-category="modules">
+                <div>
+                    <span class="category-tag">Odoo Modules</span>
+                    <h3 class="repo-name">Odoo Modules</h3>
+                    <p class="repo-desc">Reusable and client-specific modules built with structured architecture and
+                        maintainable code standards.</p>
+                    <div class="repo-tags">
+                        <span class="tag">Odoo 17/18</span>
+                        <span class="tag">Enterprise</span>
+                        <span class="tag">Framework</span>
+                    </div>
+                </div>
+                <a href="https://github.com/Hsxtech-AliMuzafar/Odoo_Modules" target="_blank" class="view-btn">
+                    View Repository
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="repo-card" data-category="modules">
+                <div>
+                    <span class="category-tag">Odoo Modules</span>
+                    <h3 class="repo-name">Odoo Website Embed Code</h3>
+                    <p class="repo-desc">Specialized frontend modules for Odoo website customization and interactive UI
+                        components.</p>
+                    <div class="repo-tags">
+                        <span class="tag">Odoo</span>
+                        <span class="tag">HTML5</span>
+                        <span class="tag">CSS3</span>
+                        <span class="tag">JS</span>
+                    </div>
+                </div>
+                <a href="https://github.com/Hsxtech-AliMuzafar/Odoo_Website_Embed_Code" target="_blank"
+                    class="view-btn">
+                    View Repository
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Automation -->
+            <div class="repo-card" data-category="automation">
+                <div>
+                    <span class="category-tag">Automation</span>
+                    <h3 class="repo-name">Odoo Server Actions</h3>
+                    <p class="repo-desc">Advanced server-side logic and automated actions designed to streamline complex
+                        business workflows.</p>
+                    <div class="repo-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Server Actions</span>
+                        <span class="tag">Automation</span>
+                    </div>
+                </div>
+                <a href="https://github.com/Hsxtech-AliMuzafar/Odoo_Server_Actions" target="_blank" class="view-btn">
+                    View Repository
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="repo-card" data-category="automation">
+                <div>
+                    <span class="category-tag">Automation</span>
+                    <h3 class="repo-name">Odoo Automations Python</h3>
+                    <p class="repo-desc">Dedicated scripting and Python-based automation tools for Odoo instance
+                        management and data processing.</p>
+                    <div class="repo-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Workflow</span>
+                        <span class="tag">Backend</span>
+                    </div>
+                </div>
+                <a href="https://github.com/Hsxtech-AliMuzafar/Odoo_Automations_Python" target="_blank"
+                    class="view-btn">
+                    View Repository
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- BI & SQL -->
+            <div class="repo-card" data-category="bi">
+                <div>
+                    <span class="category-tag">BI & SQL Engineering</span>
+                    <h3 class="repo-name">Odoo GRAP BI Queries</h3>
+                    <p class="repo-desc">Complex SQL structures and PostgreSQL optimizations for advanced Odoo reporting
+                        and BI dashboards.</p>
+                    <div class="repo-tags">
+                        <span class="tag">SQL</span>
+                        <span class="tag">BI</span>
+                        <span class="tag">PostgreSQL</span>
+                    </div>
+                </div>
+                <a href="https://github.com/Hsxtech-AliMuzafar/Odoo_GRAP_BI_Queries" target="_blank" class="view-btn">
+                    View Repository
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Utilities -->
+            <div class="repo-card" data-category="utilities">
+                <div>
+                    <span class="category-tag">Embed & Integration Utilities</span>
+                    <h3 class="repo-name">Frontend Integration Tools</h3>
+                    <p class="repo-desc">Front-end embeds, API connectors, and cross-system integrations for modern web
+                        environments.</p>
+                    <div class="repo-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">API</span>
+                        <span class="tag">Integration</span>
+                    </div>
+                </div>
+                <a href="https://github.com/Hsxtech-AliMuzafar/Odoo_Website_Embed_Code" target="_blank"
+                    class="view-btn">
+                    View Utilities
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <script>
+            /* --- TECH BACKGROUND ANIMATION --- */
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 80;
+            let mouse = { x: null, y: null, radius: 150 };
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            window.addEventListener('resize', resize);
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.4;
+                    this.vy = (Math.random() - 0.5) * 0.4;
+                    this.size = Math.random() * 2 + 1;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                    // Mouse reaction
+                    if (mouse.x != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < mouse.radius) {
+                            const force = (mouse.radius - dist) / mouse.radius;
+                            this.x -= dx * force * 0.02;
+                            this.y -= dy * force * 0.02;
+                        }
+                    }
+                }
+                draw() {
+                    ctx.fillStyle = 'rgba(213, 38, 77, 0.5)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function init() {
+                resize();
+                for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+                animate();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+
+                // Draw connections
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 150) {
+                            ctx.strokeStyle = `rgba(213, 38, 77, ${0.2 * (1 - dist / 150)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+
+                    // Mouse connections
+                    if (mouse.x != null) {
+                        const mdx = particles[i].x - mouse.x;
+                        const mdy = particles[i].y - mouse.y;
+                        const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                        if (mdist < mouse.radius) {
+                            ctx.strokeStyle = `rgba(213, 38, 77, ${0.4 * (1 - mdist / mouse.radius)})`;
+                            ctx.lineWidth = 0.8;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(mouse.x, mouse.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            init();
+
+            /* --- FILTER LOGIC --- */
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                const repoCards = document.querySelectorAll('.repo-card');
+
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        const filterValue = btn.getAttribute('data-filter');
+
+                        repoCards.forEach(card => {
+                            const category = card.getAttribute('data-category');
+
+                            if (filterValue === 'all' || category === filterValue) {
+                                card.classList.remove('hidden');
+                                card.style.animation = 'none';
+                                card.offsetHeight;
+                                card.style.animation = 'cardFadeIn 0.6s ease forwards';
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
+</body>
+
+</html>
